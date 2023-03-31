@@ -1,0 +1,26 @@
+{
+  "name": "book-record-management",
+  "version": "1.0.0",
+  "description": "This is a book record management API Backend for the management of records and books made with node.js and express",
+  "main": "index.js",
+  "scripts": {
+    "dev":"nodemon index.js",
+    "start":"node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RunawayGOD/book-record-management.git"
+  },
+  "author": "Utkarsh Yadav",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RunawayGOD/book-record-management/issues"
+  },
+  "homepage": "https://github.com/RunawayGOD/book-record-management#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
