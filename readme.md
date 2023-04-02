@@ -9,12 +9,12 @@ This is a book record management API Backend for the management of records and b
 
 ## /users
 
-POST: Create a new user 
-GET: Get all list of users 
+POST: Create a new user ✔️
+GET: Get all list of users ✔️
 
 ## /users/{id}
 
-GET: Get a user by id and all the books issued by them
+GET: Get info about a user by id  ✔️
 PUT: Update a user by id 
 DELETE: Delete a user by id (check if he/she still has an issued book) (is there any fine to be paid) 
 
@@ -40,6 +40,7 @@ DELETE:Delete a book by id
 ## /books/issued/by-users
 
 GET: Get all issued books users
+POST:Post a new book to a user
 
 ## /books/issued/withFine
 
