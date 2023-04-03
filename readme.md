@@ -3,7 +3,7 @@
 This is a book record management API Backend for the management of records and books
 
 # API Documentation link
-
+ https://documenter.getpostman.com/view/26561821/2s93RWMqEK
 
 # Routes and Endpoints
 
@@ -15,8 +15,8 @@ GET: Get all list of users ✔️
 ## /users/{id}
 
 GET: Get info about a user by id  ✔️
-PUT: Update a user by id 
-DELETE: Delete a user by id (check if he/she still has an issued book) (is there any fine to be paid) 
+PUT: Update a user by id  ✔️
+DELETE: Delete a user by id (check if he/she still has an issued book) (is there any fine to be paid) 👍
 
 ## /users/subscription-details/{id}
 

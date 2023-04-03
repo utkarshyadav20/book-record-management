@@ -37,7 +37,7 @@ app.get("/users", (req, res) => {
 * Parameters: id
 */
 
-app.get("/user/:id",(req,res)=>{
+app.get("/users/:id",(req,res)=>{
     const {id}=req.params;
     const user=users.find((each)=>each.id===id);
     if(!user){
@@ -91,7 +91,7 @@ app.post("/users",(req,res)=>{
 * Access: public
 * Parameters: id
 */
-app.put("/user/:id",(req,res)=>{
+app.put("/users/:id",(req,res)=>{
     const {id}=req.params;
     const {data}=req.body;
     
@@ -120,6 +120,48 @@ app.put("/user/:id",(req,res)=>{
         data:updatedUser,
     });
 });
+/*
+* Route: /users/:id
+* Method: DELETE
+* Description: Delete a user by id
+* Access: public
+* Parameters: id    
+*/
+app.delete("/users/:id",(req,res)=>{
+    const {id}=req.params;
+    const user=users.find((each)=>each.id===id);
+    if(!user){
+        return res.status(404).json({
+            succes:false,
+            message:"The user you are trying to delete does't exist"
+        });
+    }
+    const index=users.indexOf(user);
+    users.splice(index,1);
+    return res.status(202).json({
+        succes:true,
+        data:users,
+    })
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
