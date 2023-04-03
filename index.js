@@ -1,13 +1,17 @@
-const { response } = require("express");
 const express = require("express");
+const app = express();       //initlizing the server
 //JSON data import
 const { users } = require('./data/users.json');
+const { books } = require('./data/books.json');
+//Importing the routes
+const usersRouter=require("./routes/users.js");
+const booksRouter=require("./routes/books.js");
 
-const app = express();
+
 
 const PORT = 8081;
 
-app.use(express.json());
+app.use(express.json());              //setting the defauult exchange of files as json
 
 app.get("/", (req, res) => {
     res.status(200).json({
@@ -15,153 +19,10 @@ app.get("/", (req, res) => {
     });
 });
 
-/*
-* Route: /users
-* Method: GET
-* Description: Get all users
-* Access: public
-* Parameters: None
-*/
-app.get("/users", (req, res) => {
-    res.status(200).json({
-        success: true,
-        data: users,
-    });
-});
-
-/*
-* Route: /users/:id
-* Method: GET
-* Description: Get a single user by id
-* Access: public
-* Parameters: id
-*/
-
-app.get("/users/:id",(req,res)=>{
-    const {id}=req.params;
-    const user=users.find((each)=>each.id===id);
-    if(!user){
-        return res.status(404).json({
-            success:false,
-            message:"User not found"
-
-        });
-    }
-    res.status(200).json({
-        success:true,
-        data:user,
-    });
-});
-/*
-* Route: /users
-* Method: POST
-* Description: Craete a new user
-* Access: public
-* Parameters: none
-*/
-app.post("/users",(req,res)=>{
-    const {id,name,surname,email,subscriptionType,subscriptionDate}=req.body;
-    const a=req.body;
-    const user=users.find((each)=>each.id===id);
-    if(user){
-        return res.status(404).json({
-            success:false,
-            message:"User existes with this id"
-        });
-    }
-    
-    users.push({
-        id,
-        name,
-        surname,
-        email,
-        subscriptionType,
-        subscriptionDate
-    });    
-    return res.status(201).json({
-        succes:true,
-        message:"User added:>",
-        data:a,
-    });
-});
-/*
-* Route: /users/:id
-* Method: PUT
-* Description: Update a user by id
-* Access: public
-* Parameters: id
-*/
-app.put("/users/:id",(req,res)=>{
-    const {id}=req.params;
-    const {data}=req.body;
-    
-    const user=users.find((each)=>each.id===id);
-    // console.log(user);
-
-    if(!user){
-        return res.status(404).json({
-            succes:false,
-            messaage:"No user found by given id"
-        });
-    }
-    const updatedUser=users.map((each)=>{              //map returns a  array whereas find returns a single value
-        if(each.id===id){
-            return {
-                ...each,              //this will modify the values inside the each object from the data object for eg
-                ...data,             // if you have  a variable with some value in each and the same variable hsa a different value in data the value in each will be overridden by the value in data
-                                    //and if a variable is not present in each object but is there in data object it will be created newly in each
-                                    // ... is known as spread operator                                                            
-            }
-        }
-        return each;
-    });
-    return res.status(200).json({
-        succes:true,
-        data:updatedUser,
-    });
-});
-/*
-* Route: /users/:id
-* Method: DELETE
-* Description: Delete a user by id
-* Access: public
-* Parameters: id    
-*/
-app.delete("/users/:id",(req,res)=>{
-    const {id}=req.params;
-    const user=users.find((each)=>each.id===id);
-    if(!user){
-        return res.status(404).json({
-            succes:false,
-            message:"The user you are trying to delete does't exist"
-        });
-    }
-    const index=users.indexOf(user);
-    users.splice(index,1);
-    return res.status(202).json({
-        succes:true,
-        data:users,
-    })
-});
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+app.use("/users",usersRouter);  //request for users redirected to userRouters further to user.js
+app.use("/books",booksRouter);
 
 
 
