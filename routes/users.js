@@ -121,6 +121,12 @@ Router.put("/:id",(req,res)=>{
 Router.delete("/:id",(req,res)=>{
     const {id}=req.params;
     const user=users.find((each)=>each.id===id);
+  if(user && user.issuedBook){
+          return res.status(403).json({
+            success:false,
+            message:"The user you are trying to delete has book with him"
+          });
+  }     
     if(!user){
         return res.status(404).json({
             succes:false,
