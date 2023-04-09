@@ -7,7 +7,7 @@ const Router=express.Router();
 
 
 /*
-* Route: /users
+* Route: /
 * Method: GET
 * Description: Get all users
 * Access: public
@@ -95,17 +95,25 @@ Router.put("/:id",(req,res)=>{
             messaage:"No user found by given id"
         });
     }
-    const updatedUser=users.map((each)=>{              //map returns a  array whereas find returns a single value
-        if(each.id===id){
-            return {
-                ...each,              //this will modify the values inside the each object from the data object for eg
-                ...data,             // if you have  a variable with some value in each and the same variable hsa a different value in data the value in each will be overridden by the value in data
-                                    //and if a variable is not present in each object but is there in data object it will be created newly in each
-                                    // ... is known as spread operator                                                            
-            }
-        }
-        return each;
-    });
+    // const updatedUser=users.map((each)=>{              //map returns a  array whereas find returns a single value
+    //     if(each.id===id){
+    //         return {
+    //             ...each,              //this will modify the values inside the each object from the data object for eg
+    //             ...data,             // if you have  a variable with some value in each and the same variable hsa a different value in data the value in each will be overridden by the value in data
+    //                                 //and if a variable is not present in each object but is there in data object it will be created newly in each
+    //                                 // ... is known as spread operator                                                            
+    //         }
+    //     }
+    //     return each;
+    // });
+    const index=users.indexOf(user);
+    const saperatedUser=users.splice(index,1);
+    const saperatedObjectOfuser=saperatedUser[0];
+    const updatedUser=Object.assign(saperatedObjectOfuser,data);
+    users.push(updatedUser);
+    users.sort((obj1,obj2)=>{
+         return obj1.id-obj2.id;
+    })
     return res.status(200).json({
         succes:true,
         data:updatedUser,
@@ -140,6 +148,22 @@ Router.delete("/:id",(req,res)=>{
         data:users,
     })
 });
+/*
+* Route: /users/:id
+* Method: DELETE
+* Description: Delete a user by id
+* Access: public
+* Parameters: id    
+*/
+
+
+
+
+
+
+
+
+
 
 //default export
 module.exports=Router; //we cannot import the routes made by router unless we export it from here{like giving permission to use router used in index.js}

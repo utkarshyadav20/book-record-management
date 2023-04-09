@@ -103,10 +103,42 @@ Router.delete("/:id",(req,res)=>{
 */
 Router.put("/:id",(req,res)=>{
    const {id}=req.params;
+   const {data}=req.body;
+//    console.log(data);
    const book=books.find((each)=>each.id===id);
    if(!book){
-
+      return res.status(404).json({
+        success:false,
+        message:"No book with the given id found"
+      })
    }
+//    const newBooks=books.map((each)=>{
+//        if(each.id===id){
+//         return {
+//             ...each,
+//             ... data
+//         }
+//        }   
+//        return {
+//         ...data,
+//         ...each
+//        }    
+
+//    })
+  const index=books.indexOf(book);
+  const saperatedData= books.splice(index,1);
+  const saperatedObject=saperatedData[0];
+  const modifiedObj=Object.assign(saperatedObject,data);
+  books.push(modifiedObj);
+  books.sort((obj1,obj2)=>{
+    return obj1.id-obj2.id;
+  })
+  return res.status(200).json({
+    success:true,
+    message:"Book updated",
+    data:modifiedObj,
+  })
+    
 })
 
 
