@@ -140,6 +140,53 @@ Router.put("/:id",(req,res)=>{
   })
     
 })
+/*
+* Route: /books/issued/by-users
+* Method: Get
+* Description: Get a list if all the bookks and users
+* Access: public
+* Parameters: none
+*/
+Router.get("/issued/by-users",(req,res)=>{
+   const usersWithIssuedBooks=users.filter((each)=>{
+    if(each.issuedBook){
+        return each;
+    }
+   })
+   const issuedBook=[];
+
+   usersWithIssuedBooks.forEach((each)=>{
+    const book=books.find((a)=>a.id===each.issuedBook);
+
+
+    book.issuedBy=each.name;
+    book.issuedDate=each.issuedDate;
+    book.returnDate=each.returnDate;
+    
+    issuedBook.push(book);
+ 
+   })
+
+   if(issuedBook.length===0){
+    return res.status(404).json({
+        success:true,
+        message:"No books issues by any users"
+    })
+}
+    return res.status(200).json({
+        success:true,
+        message:"Books issues are:>",
+        data:issuedBook
+    })
+   
+   
+
+
+
+
+
+})
+
 
 
 module.exports=Router;

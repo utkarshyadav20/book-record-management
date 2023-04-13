@@ -24,8 +24,8 @@
     },
     {
       "id": "3",
-      "name": "Jane",
-      "surname": "Doe",
+      "name": "Docy",
+      "surname": "Aran",
       "email": "user@email.com",
       "issuedBook": "3",
       "issuedDate": "01/07/2021",
@@ -35,8 +35,8 @@
     },
     {
       "id": "4",
-      "name": "Jane",
-      "surname": "Doe",
+      "name": "Apax",
+      "surname": "Marth",
       "email": "user@email.com",
       "subscriptionType": "Premium",
       "subscriptionDate": "01/01/2022"
