@@ -28,19 +28,18 @@ GET: Get user subscription details
 
 ## /books
 
-GET: Get all books 
-POST: Create/Add a new book 
+GET: Get all books ✔️
+POST: Create/Add a new book ✔️
 
 ## /books/{id}
 
-GET: Get a book by id 
-PUT: Update a book by id 
-DELETE:Delete a book by id
+GET: Get a book by id ✔️
+PUT: Update a book by id ✔️
+DELETE:Delete a book by id ✔️
 
 ## /books/issued/by-users
 
-GET: Get all issued books users
-POST:Post a new book to a user
+GET: Get the list all issued books & users✔️
 
 ## /books/issued/withFine
 
@@ -63,3 +62,8 @@ If he missed the date of return, then he gts a fine of Rs. 100.
 
 If he has an issued book and the issued book is to be returned at 01/01/23
 If he missed the date of return, and his subscription also expires, then he will get a fine of Rs 200. 
+
+
+
+
+

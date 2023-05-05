@@ -153,21 +153,20 @@ Router.get("/issued/by-users",(req,res)=>{
         return each;
     }
    })
-   const issuedBook=[];
+//    console.log(usersWithIssuedBooks);
+   const newissuedBook=[];
 
    usersWithIssuedBooks.forEach((each)=>{
-    const book=books.find((a)=>a.id===each.issuedBook);
-
-
+    const book=books.find((a)=>a.id===each.issuedBook)
     book.issuedBy=each.name;
     book.issuedDate=each.issuedDate;
     book.returnDate=each.returnDate;
-    
-    issuedBook.push(book);
- 
+
+
+    newissuedBook.push(book);
    })
 
-   if(issuedBook.length===0){
+   if(newissuedBook.length===0){
     return res.status(404).json({
         success:true,
         message:"No books issues by any users"
@@ -176,17 +175,35 @@ Router.get("/issued/by-users",(req,res)=>{
     return res.status(200).json({
         success:true,
         message:"Books issues are:>",
-        data:issuedBook
+        data:newissuedBook
     })
-   
-   
-
-
-
-
 
 })
-
+/*
+* Route: /books/issued/by-users
+* Method: Get
+* Description: Get a list if all the bookks and users
+* Access: public
+* Parameters: none
+*/
+Router.put("/post/:id",(req,res)=>{
+    const {bookid}=req.body;
+    const {id}=req.params;
+    // console.log(userid,bookid)
+    const user=users.find((each)=>each.id===id);
+    if(!user){
+        return res.status(404).json({
+            success:false,
+            message:"No user found"
+        })
+    }
+user.issuedBook.push(bookid);
+  return res.status(200).json({
+    success:true,
+    message:"Added new book to a user",
+    data:user
+  })
+})
 
 
 module.exports=Router;
