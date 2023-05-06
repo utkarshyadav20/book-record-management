@@ -149,13 +149,71 @@ Router.delete("/:id",(req,res)=>{
     })
 });
 /*
-* Route: /users/:id
-* Method: DELETE
-* Description: Delete a user by id
+* Route: /users/subscription-details/:id
+* Method: get
+* Description:Get the subscriptoin details of a user
 * Access: public
 * Parameters: id    
 */
+Router.get("/subscription-deatils/:id",(req,res)=>{
+    const {id}=req.params;
+    const user=users.find((each)=>each.id===id)
+        if(!user){
+            return res.status(404).json({
+                succes:false,
+                message:"User not found"
+            })
+        }
+    const getinDays=(data="") =>{
+        let date;
+        if(data===""){
+            date=new Date();
+        }
+        else{
+            date=new Date(data)
+        }
+        let days=Math.floor(date/(1000*60*60*24));
+        return days;
+    }
+    const subscriptonType=(date)=>{
+        if(user.subscriptionType==="Basic"){
+            date=date+90;
+        }
+        else if(user.subscriptionType==="Standard"){
+            date=date+180;
+        }
+        else if(user.subscriptionType==="Premium"){
+            date=date+360;
+        }
+        return date;
+    }
+    let returnDate=getinDays(user.returnDate);     //return days  from 1970
+    let currentDate=getinDays();                  // current days    from 1970
+    let subsciptionDays=getinDays(user.subscriptionDate);     //subscription start days from 1970 standard
+    let subscriptionExpDays=subscriptonType(subsciptionDays);      //subscription end days from 1970
+    // console.log("returnDate",returnDate);
+    // console.log("currentDate",currentDate);
+    // console.log("subscriptionDate",subsciptionDays);
+    // console.log("Subscription expiry",subscriptionExpDays);
+    const data={
+       ...user,
+       subscriptionExpired:subscriptionExpDays<currentDate,
+       daysLeftforExpiration:
+       subscriptionExpDays<currentDate?0:subscriptionExpDays-currentDate,
+       fine:
+          returnDate<currentDate?
+           subscriptionExpDays>=currentDate?100:200
+           :
+           0,
+    }
+    return res.status(200).json({
+        success:true,
+        data
+    })
+    
 
+
+})
 
 
 
