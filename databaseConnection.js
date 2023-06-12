@@ -10,6 +10,7 @@ function dbConncetion() {
   const db = mongoose.connection; // variable made to monitor all the stages of db connection
 
   db.on("error", console.error.bind(console, "Connection error: ")); //on checks the connection continuoisly //bind is used to make a function out of a old fucntion{here the properties of console are used to show connection error}
+  
   db.once("open", function () {
     console.log("DB connected..");
   });
