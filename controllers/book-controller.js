@@ -1,3 +1,5 @@
+const IssuedBook = require("../dtlos/book-dtlos.js");
+const { db } = require("../models/book-model.js");
 const { BookModel, UserModel } = require("../models/models.js");
 
 exports.getAllBooks = async (req, res) => {
@@ -16,7 +18,7 @@ exports.getAllBooks = async (req, res) => {
 };
 
 exports.getSingleBook = async (req, res) => {
-  const { id } =  req.params;
+  const { id } = req.params;
   const book = await BookModel.findById(id);
   if (!book) {
     return res.status(404).json({
@@ -31,23 +33,76 @@ exports.getSingleBook = async (req, res) => {
   });
 };
 
-exports.getAllIssuedBooks=async (req,res)=>{
+exports.getAllIssuedBooks = async (req, res) => {
+  const userWithIssuedBooks = await UserModel.find({
+    issuedBook: { $exists: true },
+  }).populate("issuedBook");
+  const issuedBooks = userWithIssuedBooks.map((each) => new IssuedBook(each)); //only getting the required data with the help of dto
+
+  if (issuedBooks.length === 0) {
+    return res.status(404).json({
+      success: true,
+      message: "No books issues by any users",
+    });
+  }
+  return res.status(200).json({
+    success: true,
+    message: "Books issues are:>",
+    data: issuedBooks,
+  });
+};
+
+exports.addNewBook = async (req, res) => {
+  const { data } = req.body;
+
+  if (!data) {
+    return res.status(400).json({
+      success: false,
+      message: "No data provided",
+    });
+  }
+  const newBook = await BookModel.create(data);
+
+  // const allBooks=await BookModel.find();
+
+  return res.status(200).json({
+    success: true,
+    message: "Follwing book added:>",
+    data: newBook,
+  });
+};
+
+exports.updateBookById = async (req, res) => {
+  const { id } = req.params;
+  const { data } = req.body;
+  const updateBook = await BookModel.findOneAndUpdate(
+    {
+      _id: id,
+    },
+    data,
+    {
+      new: true,           //getting the upadted data like prefix and postfix
+    }
+  );
+  return res.status(200).json({
+    success: true,
+    message: "Book updated",
+    data: updateBook,
+  });
+};
+
+exports.deleteBookById=async (req,res)=>{
     
-     const userWithIssuedBooks=await UserModel.find({
-        issuedBook:{$exists:true},
-     }).populate("issuedBook")
-     
-        if(userWithIssuedBooks.length===0){
-         return res.status(404).json({
-             success:true,
-             message:"No books issues by any users"
-         })
-     }
-         return res.status(200).json({
-             success:true,
-             message:"Books issues are:>",
-             data:userWithIssuedBooks
-         })
-     
-     
+        const {id}=req.params;
+        await BookModel.deleteOne({
+            _id:id
+        });
+
+       const newBooks=await BookModel.find();
+        return res.status(200).json({
+            success:true,
+            message:"Books after deletion",
+            data:newBooks
+        });
+    
 }
