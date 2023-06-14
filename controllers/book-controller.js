@@ -33,7 +33,7 @@ exports.getSingleBook = async (req, res) => {
   });
 };
 
-exports.getAllIssuedBooks = async (req, res) => {
+exports.getAllIssuedBooks = async (req, res) => {    //check after making the user model
   const userWithIssuedBooks = await UserModel.find({
     issuedBook: { $exists: true },
   }).populate("issuedBook");
@@ -77,11 +77,11 @@ exports.updateBookById = async (req, res) => {
   const { data } = req.body;
   const updateBook = await BookModel.findOneAndUpdate(
     {
-      _id: id,
+      _id: id, //condition
     },
-    data,
+    data, //data to update
     {
-      new: true,           //getting the upadted data like prefix and postfix
+      new: true, //getting the upadted data like prefix and postfix
     }
   );
   return res.status(200).json({
@@ -91,18 +91,39 @@ exports.updateBookById = async (req, res) => {
   });
 };
 
-exports.deleteBookById=async (req,res)=>{
-    
-        const {id}=req.params;
-        await BookModel.deleteOne({
-            _id:id
-        });
+exports.deleteBookById = async (req, res) => {
+  const { id } = req.params;
+  await BookModel.deleteOne({
+    _id:id
+  })
 
-       const newBooks=await BookModel.find();
-        return res.status(200).json({
-            success:true,
-            message:"Books after deletion",
-            data:newBooks
-        });
-    
-}
+  const newBooks = await BookModel.find();
+  return res.status(200).json({
+    success: true,
+    message: "Books after deletion",
+    data: newBooks,
+  });
+};
+
+exports.addNewBookToUser = async (req, res) => {         //check after making the UserModel
+  const { bookid } = req.body;
+  const { userid } = req.params;     //user to which book is added
+  // console.log(userid,bookid)
+  const user = await UserModel.findById(userid);
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "No user found",
+    });
+  }
+  await UserModel.updateOne(
+    { _id: userid},
+    { $push: { issuedBook: bookid } }
+ )
+  
+  return res.status(200).json({
+    success: true,
+    message: "Added new book to a user",
+    data: user,
+  });
+};             

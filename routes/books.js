@@ -2,6 +2,7 @@ const express=require("express");
 const Router=express.Router();
 const { users } = require('../data/users.json');
 const { books } = require('../data/books.json');
+const { getAllBooks, getSingleBook, getAllIssuedBooks, updateBookById, addNewBookToUser, addNewBook, deleteBookById } = require("../controllers/book-controller");
 
 
 /*
@@ -11,12 +12,10 @@ const { books } = require('../data/books.json');
 * Access: public
 * Parameters: None
 */
-Router.get("/",(req,res)=>{
-    res.status(200).json({
-        success:true,
-        data:books
-    });
-});
+Router.get("/",getAllBooks);
+
+
+
 /*
 * Route: /
 * Method: POST
@@ -24,30 +23,10 @@ Router.get("/",(req,res)=>{
 * Access: public
 * Parameters: None
 */
-Router.post("/",(req,res)=>{
-    const {id,name,author,genre,price,publisher}=req.body;
-    const a=req.body;
-    const book=books.find((each)=>each.id===id)
-    if(book){
-        return res.status(404).json({
-            success:false,
-            message:"User alredy exists with the given id"
-        });
-    }
-   books.push({
-    id,
-    name,
-    author,
-    genre,
-    price,
-    publisher
-   });
-   return res.status(200).json({
-    success:true,
-    message:"Follwing book added:>",
-    data:a,
-   });  
-})
+Router.post("/",addNewBook)
+
+
+
 /*
 * Route: /books/:id
 * Method: GET
@@ -55,21 +34,12 @@ Router.post("/",(req,res)=>{
 * Access: public
 * Parameters: id
 */
-Router.get("/:id",(req,res)=>{
-    const {id}=req.params;
-    const book=books.find((each)=>each.id===id);
-    if(!book){
-        return res.status(404).json({
-            success:false,
-            message:"No book exists by the given id"
-        });
-    }
-    return res.status(200).json({
-        success:true,
-        message:"Book found",
-        data:book
-    });
-})
+Router.get("/:id",getSingleBook)
+
+
+
+
+
 /*
 * Route: /books/:id
 * Method: DELETE
@@ -77,23 +47,10 @@ Router.get("/:id",(req,res)=>{
 * Access: public
 * Parameters: id
 */
-Router.delete("/:id",(req,res)=>{
-    const {id}=req.params;
-    const book=books.find((each)=>each.id===id);
-    if(!book){
-        return res.status(400).json({
-            success:false,
-            message:"Book by given id does not exists"
-        });
-    }
-    const index=books.indexOf(book);
-    books.splice(index,1);
-    return res.status(200).json({
-        success:true,
-        message:"Deleted the  item:>",
-        data:book
-    });
-})
+Router.delete("/:id",deleteBookById)
+
+
+
 /*
 * Route: /books/:id
 * Method: PUT
@@ -101,45 +58,10 @@ Router.delete("/:id",(req,res)=>{
 * Access: public
 * Parameters: id
 */
-Router.put("/:id",(req,res)=>{
-   const {id}=req.params;
-   const {data}=req.body;
-//    console.log(data);
-   const book=books.find((each)=>each.id===id);
-   if(!book){
-      return res.status(404).json({
-        success:false,
-        message:"No book with the given id found"
-      })
-   }
-//    const newBooks=books.map((each)=>{
-//        if(each.id===id){
-//         return {
-//             ...each,
-//             ... data
-//         }
-//        }   
-//        return {
-//         ...data,
-//         ...each
-//        }    
+Router.put("/:id",updateBookById)
 
-//    })
-  const index=books.indexOf(book);
-  const saperatedData= books.splice(index,1);
-  const saperatedObject=saperatedData[0];
-  const modifiedObj=Object.assign(saperatedObject,data);
-  books.push(modifiedObj);
-  books.sort((obj1,obj2)=>{
-    return obj1.id-obj2.id;
-  })
-  return res.status(200).json({
-    success:true,
-    message:"Book updated",
-    data:modifiedObj,
-  })
-    
-})
+
+
 /*
 * Route: /books/issued/by-users
 * Method: Get
@@ -147,63 +69,18 @@ Router.put("/:id",(req,res)=>{
 * Access: public
 * Parameters: none
 */
-Router.get("/issued/by-users",(req,res)=>{
-   const usersWithIssuedBooks=users.filter((each)=>{
-    if(each.issuedBook){
-        return each;
-    }
-   })
-//    console.log(usersWithIssuedBooks);
-   const newissuedBook=[];
-
-   usersWithIssuedBooks.forEach((each)=>{
-    const book=books.find((a)=>a.id===each.issuedBook)
-    book.issuedBy=each.name;
-    book.issuedDate=each.issuedDate;
-    book.returnDate=each.returnDate;
+Router.get("/issued/by-users",getAllIssuedBooks)
 
 
-    newissuedBook.push(book);
-   })
 
-   if(newissuedBook.length===0){
-    return res.status(404).json({
-        success:true,
-        message:"No books issues by any users"
-    })
-}
-    return res.status(200).json({
-        success:true,
-        message:"Books issues are:>",
-        data:newissuedBook
-    })
-
-})
 /*
-* Route: /books/issued/by-users
-* Method: Get
-* Description: Get a list if all the bookks and users
+* Route: /books/post/:id
+* Method: put
+* Description: Adding a new book to a user 
 * Access: public
-* Parameters: none
+* Parameters: id of the user 
 */
-Router.put("/post/:id",(req,res)=>{
-    const {bookid}=req.body;
-    const {id}=req.params;
-    // console.log(userid,bookid)
-    const user=users.find((each)=>each.id===id);
-    if(!user){
-        return res.status(404).json({
-            success:false,
-            message:"No user found"
-        })
-    }
-user.issuedBook.push(bookid);
-  return res.status(200).json({
-    success:true,
-    message:"Added new book to a user",
-    data:user
-  })
-})
+Router.put("/post/:id",addNewBookToUser)
 
 
 module.exports=Router;

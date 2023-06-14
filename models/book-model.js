@@ -27,7 +27,7 @@ const bookSchema= new Schema(
     
    },
    {
-    timestamp:true,         //creating a timestamp wherever a book is created
+    timestamps:true,         //creating a timestamp wherever a book is created
    }
 
 )
