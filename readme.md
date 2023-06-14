@@ -64,3 +64,4 @@ If he missed the date of return, and his subscription also expires, then he will
 
 
 
+Misc;>Remeber to add the .env file with mongo_uri for authtiaction of the DB admin
