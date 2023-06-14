@@ -39,7 +39,7 @@ const userSchema = new Schema(
     },
   },
   {
-    timestamp: true,
+    timestamps: true,
   }
 );
 

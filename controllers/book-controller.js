@@ -17,7 +17,7 @@ exports.getAllBooks = async (req, res) => {
   });
 };
 
-exports.getSingleBook = async (req, res) => {
+exports.getSingleBook = async (req, res) => {    //findOne can be used to search the book by 
   const { id } = req.params;
   const book = await BookModel.findById(id);
   if (!book) {
